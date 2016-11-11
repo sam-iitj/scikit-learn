@@ -4,7 +4,7 @@
 from .stochastic_gradient import BaseSGDClassifier
 from .stochastic_gradient import BaseSGDRegressor
 from .stochastic_gradient import DEFAULT_EPSILON
-
+import numpy as np 
 
 class PassiveAggressiveClassifier(BaseSGDClassifier):
     """Passive Aggressive Classifier
@@ -247,6 +247,30 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
             warm_start=warm_start)
         self.C = C
         self.loss = loss
+
+    def partial_fit_(self, X, y, e):
+        """Gmail Priority Inbox implementation of Passive Aggressive Algorithm update rule.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape = [n_samples, n_features]
+            Subset of training data
+
+        y : numpy array of shape [n_samples]
+            Subset of target values
+
+        e : numpy array of shape [n_samples]
+            Error computed for each training sample
+        """
+        if X.ndim == 1:
+            update = ((np.sign(e[0]) * max(abs(e[0]) - self.epsilon, 0))/(np.linalg.norm(X, 2) + 0.5 * self.C))
+            self.coef_ += X * update
+            self.intercept_ += update
+        elif X.ndim == 2:
+            for i in range(X.shape[0]):
+                update = ((np.sign(e[i]) * max(abs(e[i]) - self.epsilon, 0)) / ( np.linalg.norm(X[i, :],2) + 0.5 * self.C))
+                self.coef_ += X[i, :] * update
+                self.intercept_ += update
 
     def partial_fit(self, X, y):
         """Fit linear model with Passive Aggressive algorithm.
