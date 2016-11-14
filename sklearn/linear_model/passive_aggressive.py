@@ -264,11 +264,12 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
         """
         if X.ndim == 1:
             update = ((np.sign(e[0]) * max(abs(e[0]) - self.epsilon, 0))/(np.linalg.norm(X, 2) + (1.0/(2 * self.C))))
+            print update 
             self.coef_ += X * update
             self.intercept_ += update
         elif X.ndim == 2:
             for i in range(X.shape[0]):
-                update = ((np.sign(e[i]) * max(abs(e[i]) - self.epsilon, 0)) / ( np.linalg.norm(X[i, :],2) + (1.0/(2 * self.C))))
+                update = ((np.sign(e[i]) * max(abs(e[i]) - self.epsilon, 0))/(np.linalg.norm(X[i, :],2) + (1.0/(2 * self.C))))
                 self.coef_ += X[i, :] * update
                 self.intercept_ += update
 
