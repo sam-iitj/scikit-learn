@@ -271,7 +271,6 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
                 update = ((np.sign(e[i]) * max(abs(e[i]) - self.epsilon, 0))/(np.linalg.norm(X[i, :],2) + (1.0/(2 * self.C))))
                 self.coef_ += X[i, :] * update
                 self.intercept_ += update
-        return update 
 
     def partial_fit(self, X, y):
         """Fit linear model with Passive Aggressive algorithm.
