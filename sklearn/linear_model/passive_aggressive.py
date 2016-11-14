@@ -248,7 +248,7 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
         self.C = C
         self.loss = loss
 
-    def partial_fit_(self, X, y, e, epsilon=0.1):
+    def partial_fit_(self, X, y, e, epsilon):
         """Gmail Priority Inbox implementation of Passive Aggressive Algorithm update rule.
 
         Parameters
@@ -261,6 +261,9 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
 
         e : numpy array of shape [n_samples]
             Error computed for each training sample
+
+        epsilon : constant 
+                  Degree of passiveness. 
         """
         if X.ndim == 1:
             update = ((np.sign(e[0]) * max(abs(e[0]) - epsilon, 0))/(np.linalg.norm(X, 2) + (1.0/(2.0 * self.C)))) 
